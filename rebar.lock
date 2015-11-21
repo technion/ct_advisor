@@ -1,0 +1,12 @@
+[{<<"ibrowse">>,
+  {git,"https://github.com/cmullaparthi/ibrowse.git",
+       {ref,"fd81d44182507c23445ed720df8c30e2e8da9d9b"}},
+  0},
+ {<<"jiffy">>,
+  {git,"https://github.com/davisp/jiffy",
+       {ref,"e008c0c3fffb4f509c5ae6b73b960663d778f231"}},
+  0},
+ {<<"proper">>,
+  {git,"git://github.com/manopapad/proper.git",
+       {ref,"2b93ff12d8caa8e23e207b04a6aff04bc2d47a63"}},
+  1}].

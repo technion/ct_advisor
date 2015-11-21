@@ -1,0 +1,17 @@
+{application, 'ct_advisor',
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {'ct_advisor_app', []}},
+  {applications,
+   [kernel,
+    stdlib,
+    ibrowse
+   ]},
+  {env,[]},
+  {modules, [ ]},
+
+  {contributors, []},
+  {licenses, []},
+  {links, []}
+ ]}.
