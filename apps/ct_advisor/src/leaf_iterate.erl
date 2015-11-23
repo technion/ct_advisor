@@ -45,7 +45,7 @@ get_domain_from_id(ID) ->
     end.
 
 enumerate_ids(ID, ID) ->
-    get_domain_from_id(ID);
+    [get_domain_from_id(ID)];
 
 enumerate_ids(FROM, TO) when FROM < TO ->
     [get_domain_from_id(FROM)| enumerate_ids(FROM+1, TO)].

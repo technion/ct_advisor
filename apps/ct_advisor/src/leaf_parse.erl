@@ -23,11 +23,16 @@ xparse(MerkleLeafB64) ->
 
 -spec get_subjects(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{extensions::[any()]}}) -> any().
 get_subjects(Cert) ->
-    Names = [Ext || Ext <- 
+    NameExtensions = [Ext || Ext <- 
         Cert#'OTPCertificate'.tbsCertificate#'OTPTBSCertificate'.extensions,
         Ext#'Extension'.extnID == {2,5,29,17} ],
-    S = lists:last(Names), % Should only be one element
-    S#'Extension'.extnValue.
+    case [Names#'Extension'.extnValue || Names <- NameExtensions] of
+    [] ->
+        [];
+    LastName ->
+        lists:last(LastName)
+    end.
+
 -ifdef(TEST). 
 -include_lib("eunit/include/eunit.hrl"). 
 -include("test_constants.hrl").
