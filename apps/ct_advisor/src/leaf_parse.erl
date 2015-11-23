@@ -26,11 +26,11 @@ get_subjects(Cert) ->
     NameExtensions = [Ext || Ext <- 
         Cert#'OTPCertificate'.tbsCertificate#'OTPTBSCertificate'.extensions,
         Ext#'Extension'.extnID == {2,5,29,17} ],
-    case [Names#'Extension'.extnValue || Names <- NameExtensions] of
+    case NameExtensions of 
     [] ->
         [];
-    LastName ->
-        lists:last(LastName)
+    [FirstNameExtension| _] ->
+        FirstNameExtension#'Extension'.extnValue
     end.
 
 -ifdef(TEST). 
@@ -38,11 +38,11 @@ get_subjects(Cert) ->
 -include("test_constants.hrl").
 %All tests based upon ID 9742371 - lolware.net
 parse_leaf_test() ->
-    ?assertEqual(parse_leaf(?TEST_LEAF_ENTRY), ?TEST_MTL).
+    ?assertEqual(?TEST_MTL, parse_leaf(?TEST_LEAF_ENTRY)).
 
 mtl_to_subjects_test() ->
     X509 = leaf_parse:xparse(?TEST_MTL),
-    ?assertEqual(leaf_parse:get_subjects(X509), ?TEST_DOMAIN_LIST).
+    ?assertEqual(?TEST_DOMAIN_LIST, leaf_parse:get_subjects(X509)).
 
 -endif.
 

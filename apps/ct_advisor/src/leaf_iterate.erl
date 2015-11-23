@@ -59,14 +59,14 @@ setup_table_test() ->
     ets:insert(sth, {latest, 1024}). %Generally random starting example
 
 range_test() ->
-    ?assertEqual(get_range(7, 8), {7, 7}),
-    ?assertEqual(get_range(7, 107), {7, 39}).
+    ?assertEqual({7, 7}, get_range(7, 8)),
+    ?assertEqual({7, 39}, get_range(7, 107)).
 
 lookup_test() ->
     lookup_updates(1025),
-    ?assertEqual(ets:lookup(sth, latest), [{latest,1025}]).
+    ?assertEqual([{latest,1025}], ets:lookup(sth, latest)).
 
 enumerate_test() ->
-    ?assertEqual(enumerate_ids(9742371 , 9742372), ?TEST_ENUMERATED_DOMAINS).
+    ?assertEqual(?TEST_ENUMERATED_DOMAINS, enumerate_ids(9742371 , 9742372)).
 
 -endif.
