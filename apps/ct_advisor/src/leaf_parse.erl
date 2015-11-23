@@ -12,10 +12,14 @@ parse_leaf(RAW) ->
 -spec xparse(binary()) -> any().
 xparse(MerkleLeafB64) ->
     MerkleLeafBin = base64:decode(MerkleLeafB64),
-    <<_Version:8, _LeafType:8, _Timestamp:64, _LogType:16, 
+    <<_Version:8, _LeafType:8, _Timestamp:64, LogType:16, 
         _ASNLen:24, Cert/binary>> = MerkleLeafBin,
-
-    public_key:pkix_decode_cert(Cert, otp).
+    case LogType of
+    0 -> 
+        public_key:pkix_decode_cert(Cert, otp);
+    _ -> % 1 is a precert - ignore. Anything else - unhandled future value.
+        none
+    end.
 
 -spec get_subjects(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{extensions::[any()]}}) -> any().
 get_subjects(Cert) ->

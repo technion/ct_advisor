@@ -37,8 +37,12 @@ get_range(LOW, HIGH) when HIGH > LOW ->
 get_domain_from_id(ID) ->
     LeafEntry =  ct_fetch:fetch_entry(ID),
     MTL = leaf_parse:parse_leaf(LeafEntry),
-    X509 = leaf_parse:xparse(MTL),
-    leaf_parse:get_subjects(X509).
+    case leaf_parse:xparse(MTL) of
+    none ->
+        [];
+    X509 ->
+        leaf_parse:get_subjects(X509)
+    end.
 
 enumerate_ids(ID, ID) ->
     get_domain_from_id(ID);
@@ -48,6 +52,7 @@ enumerate_ids(FROM, TO) when FROM < TO ->
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
+-include("test_constants.hrl").
 
 setup_table_test() ->
     sth = ets:new(sth, [ named_table, public, {read_concurrency, true}]),
@@ -60,4 +65,8 @@ range_test() ->
 lookup_test() ->
     lookup_updates(1025),
     ?assertEqual(ets:lookup(sth, latest), [{latest,1025}]).
+
+enumerate_test() ->
+    ?assertEqual(enumerate_ids(9742371 , 9742372), ?TEST_ENUMERATED_DOMAINS).
+
 -endif.
