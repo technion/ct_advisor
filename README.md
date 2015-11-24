@@ -16,14 +16,14 @@ Build
 In development
 --------------
 More documentation to be written as the project takes shape. Current status:
-[x] Communicate with CT REST API
-[x] Parse the overly complicated Merkle Tree Leaf format
-[x] Parse X509 certificates for DNS names
-[x] Run as a scheduled service
-[x] Match domains with sign up list
-[ ] Dialyzer hints on all functions
-[ ] Eunit Test suite
-[ ] Persist last lookup state across restarts
-[ ] Management interface for user/domain listing
-[ ] Common Test
-[ ] Document public access
+- [x] Communicate with CT REST API
+- [x] Parse the overly complicated Merkle Tree Leaf format
+- [x] Parse X509 certificates for DNS names
+- [x] Run as a scheduled service
+- [x] Match domains with sign up list
+- [ ] Dialyzer hints on all functions
+- [ ] Eunit Test suite
+- [ ] Persist last lookup state across restarts
+- [ ] Management interface for user/domain listing
+- [ ] Common Test
+- [ ] Document public access
