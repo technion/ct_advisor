@@ -16,6 +16,8 @@
 %%====================================================================
 setup() ->
     sth = ets:new(sth, [ named_table, public, {read_concurrency, true}]),
+    users = ets:new(users, [ named_table, public, {read_concurrency, true}]),
+    ets:insert(users, {"mail.xtraservice.de", "test@lolware.net"}),
     STH = ct_fetch:fetch_sth(), % TODO: Use previously saved disk value
     Latest = ct_fetch:parse_sth(STH),
     ets:insert(sth, {latest, Latest}),

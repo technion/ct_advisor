@@ -21,6 +21,7 @@ run_checks(LOW, HIGH) ->
     io:fwrite("Running between: ~B and ~B~n", [FROM, TO]),
     Domains = enumerate_ids(FROM, TO),
     ets:insert(sth, {latest, TO+1}),
+    domain_parse:cert_domain_list(Domains),
     Domains.
 
 get_range(LOW, HIGH) when HIGH > LOW ->
