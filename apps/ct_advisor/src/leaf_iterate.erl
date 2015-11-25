@@ -58,6 +58,7 @@ enumerate_ids(FROM, TO) when FROM < TO ->
 
 setup_table_test() ->
     sth = ets:new(sth, [ named_table, public, {read_concurrency, true}]),
+    users = ets:new(users, [ named_table, public, {read_concurrency, true}]),
     ets:insert(sth, {latest, 1024}). %Generally random starting example
 
 range_test() ->
