@@ -38,8 +38,8 @@ get_range(LOW, HIGH) when HIGH > LOW ->
 get_domain_from_id(ID) ->
     LeafEntry =  ct_fetch:fetch_entry(ID),
     MTL = leaf_parse:parse_leaf(LeafEntry),
-    case leaf_parse:xparse(MTL) of
-    none ->
+    catch case leaf_parse:xparse(MTL) of
+    {'EXIT', _}  ->
         [];
     X509 ->
         leaf_parse:get_subjects(X509)
