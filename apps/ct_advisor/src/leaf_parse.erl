@@ -15,7 +15,7 @@ xparse(MerkleLeafB64) ->
     % Logtype = 0. Crash on fail.
     <<_Version:8, _LeafType:8, _Timestamp:64, 0:16, 
         _ASNLen:24, Cert/binary>> = MerkleLeafBin,
-    catch public_key:pkix_decode_cert(Cert, otp).
+    public_key:pkix_decode_cert(Cert, otp).
 
 -spec get_subjects(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{extensions::[any()]}}) -> any().
 get_subjects(Cert) ->

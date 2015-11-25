@@ -38,11 +38,12 @@ get_range(LOW, HIGH) when HIGH > LOW ->
 get_domain_from_id(ID) ->
     LeafEntry =  ct_fetch:fetch_entry(ID),
     MTL = leaf_parse:parse_leaf(LeafEntry),
-    catch case leaf_parse:xparse(MTL) of
-    {'EXIT', _}  ->
-        [];
+    try leaf_parse:xparse(MTL) of
     X509 ->
         leaf_parse:get_subjects(X509)
+    catch
+    _:_ ->
+        []
     end.
 
 enumerate_ids(ID, ID) ->
