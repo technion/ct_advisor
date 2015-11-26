@@ -1,11 +1,13 @@
 -module(leaf_iterate).
 -compile([debug_info, export_all]).
 
+-spec scheduled_check() -> 'ok'.
 scheduled_check() ->
     STH = ct_fetch:fetch_sth(),
     Latest = ct_fetch:parse_sth(STH),
     lookup_updates(Latest).
 
+-spec lookup_updates(_) -> 'ok'.
 lookup_updates(Latest) ->
     case ets:lookup(sth, latest) of
     [{latest, LastLookup}] when Latest > LastLookup ->
@@ -16,6 +18,7 @@ lookup_updates(Latest) ->
         io:fwrite("No updates, latest still: ~B~n", [Latest])
     end.
 
+-spec run_checks(number(),number()) -> [any(),...].
 run_checks(LOW, HIGH) ->
     {FROM, TO} = get_range(LOW, HIGH),
     io:fwrite("Running between: ~B and ~B~n", [FROM, TO]),
@@ -24,6 +27,7 @@ run_checks(LOW, HIGH) ->
     domain_parse:cert_domain_list(Domains),
     Domains.
 
+-spec get_range(number(),number()) -> {number(),number()}.
 get_range(LOW, HIGH) when HIGH > LOW ->
     % Note the highest lookup should be STH -1
     % We also rate limit lookups per run
@@ -34,7 +38,7 @@ get_range(LOW, HIGH) when HIGH > LOW ->
         {LOW, HIGH-1}
     end.
         
-
+-spec get_domain_from_id(_) -> any().
 get_domain_from_id(ID) ->
     LeafEntry =  ct_fetch:fetch_entry(ID),
     MTL = leaf_parse:parse_leaf(LeafEntry),
@@ -46,6 +50,7 @@ get_domain_from_id(ID) ->
         []
     end.
 
+-spec enumerate_ids(_,_) -> [any(),...].
 enumerate_ids(ID, ID) ->
     [get_domain_from_id(ID)];
 
