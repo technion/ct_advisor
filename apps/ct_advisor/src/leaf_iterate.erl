@@ -61,20 +61,28 @@ enumerate_ids(FROM, TO) when FROM < TO ->
 -include_lib("eunit/include/eunit.hrl").
 -include("test_constants.hrl").
 
-setup_table_test() ->
+iterator_test() ->
+    {setup, fun setup_table/0, fun teardown/1, [fun ranges/0,
+        fun lookup/0, fun enumerate/0]}.
+
+setup_table() ->
     sth = ets:new(sth, [ named_table, public, {read_concurrency, true}]),
     users = ets:new(users, [ named_table, public, {read_concurrency, true}]),
     ets:insert(sth, {latest, 1024}). %Generally random starting example
 
-range_test() ->
+teardown(_) ->
+    ets:delete(sth),
+    ets:delete(users).
+
+ranges() ->
     ?assertEqual({7, 7}, get_range(7, 8)),
     ?assertEqual({7, 39}, get_range(7, 107)).
 
-lookup_test() ->
+lookup() ->
     lookup_updates(1025),
     ?assertEqual([{latest,1025}], ets:lookup(sth, latest)).
 
-enumerate_test() ->
+enumerate() ->
     ?assertEqual(?TEST_ENUMERATED_DOMAINS, enumerate_ids(9742371 , 9742372)).
 
 -endif.
