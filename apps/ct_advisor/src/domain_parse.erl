@@ -13,7 +13,7 @@ per_cert_domains(Domains) ->
     [] ->
         ok;
     Alerts ->
-        io:fwrite("We have an alert for ~p with cert ~p~n", [Alerts, Domains])
+        lager:notice("We have an alert for ~p with cert ~p~n", [Alerts, Domains])
     end.
 
 -spec lookup_name_list([{'dNSName',_}]) -> [[] | {_,_}].

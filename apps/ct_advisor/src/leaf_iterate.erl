@@ -11,17 +11,17 @@ scheduled_check() ->
 lookup_updates(Latest) ->
     case ets:lookup(sth, latest) of
     [{latest, LastLookup}] when Latest > LastLookup ->
-        io:fwrite("Performing checks: ~B~n", [Latest]),
+        lager:info("Performing checks: ~B~n", [Latest]),
         Domains = run_checks(LastLookup, Latest),
-        io:fwrite("Domains to verify: ~p~n", [Domains]);
+        lager:info("Domains to verify: ~p~n", [Domains]);
     _ ->
-        io:fwrite("No updates, latest still: ~B~n", [Latest])
+        lager:debug("No updates, latest still: ~B~n", [Latest])
     end.
 
 -spec run_checks(number(),number()) -> [any(),...].
 run_checks(LOW, HIGH) ->
     {FROM, TO} = get_range(LOW, HIGH),
-    io:fwrite("Running between: ~B and ~B~n", [FROM, TO]),
+    lager:info("Running between: ~B and ~B~n", [FROM, TO]),
     Domains = enumerate_ids(FROM, TO),
     ets:insert(sth, {latest, TO+1}),
     domain_parse:cert_domain_list(Domains),
