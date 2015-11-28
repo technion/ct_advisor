@@ -17,6 +17,7 @@
 setup_db() ->
     STH = ct_fetch:fetch_sth(), % TODO: Use previously saved disk value
     Latest = ct_fetch:parse_sth(STH),
+    sth = ets:new(sth, [ named_table, public, {read_concurrency, true}]),
     ets:insert(sth, {latest, Latest}),
     io:fwrite("First lookup: ~B~n", [Latest]).
 

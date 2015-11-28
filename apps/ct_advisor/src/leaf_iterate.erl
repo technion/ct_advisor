@@ -1,5 +1,8 @@
 -module(leaf_iterate).
--compile([debug_info, export_all]).
+-export([scheduled_check/0]).
+%enumberate_ids/2 is not a programatically required export.
+% It is often required for debugging however.
+-export([enumerate_ids/2]). 
 
 -spec scheduled_check() -> 'ok'.
 scheduled_check() ->

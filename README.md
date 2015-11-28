@@ -24,7 +24,9 @@ More documentation to be written as the project takes shape. Current status:
 - [x] Dialyzer hints on all functions
 - [x] Eunit Test suite
 - [x] Logging framework
-- [ ] Persist last lookup state across restarts
+- [x] Persist last lookup state across restarts
+- [ ] Code audit, cleanup, review
+- [ ] Actually email out alerts
 - [ ] Management interface for user/domain listing
 - [ ] Common Test
 - [ ] Document public access

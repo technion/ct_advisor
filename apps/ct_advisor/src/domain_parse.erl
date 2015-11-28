@@ -1,5 +1,5 @@
 -module(domain_parse).
--compile([debug_info, export_all]).
+-export([cert_domain_list/1]).
 
 % A list of certificates with a list of names
 -spec cert_domain_list([any()]) -> 'ok'.
@@ -17,7 +17,7 @@ per_cert_domains(Domains) ->
         ok
     end.
 
--spec lookup_name_list([{'dNSName',_}]) -> [[] | {_,_}].
+-spec lookup_name_list([{atom(),_}]) -> [[] | {_,_}].
 lookup_name_list([]) ->
     [];
 
@@ -31,7 +31,11 @@ lookup_name_list([{dNSName, Name}|Tail]) ->
     _ ->
         []
     end,
-    [Match|lookup_name_list(Tail)].
+    [Match|lookup_name_list(Tail)];
+
+lookup_name_list([{_, _Name}|Tail]) ->
+    %TIL: There are other types of subject names - see test suite
+    [lookup_name_list(Tail)].
 
 -ifdef(TEST). 
 -include_lib("eunit/include/eunit.hrl"). 
@@ -41,5 +45,6 @@ lookup_name_list_test() ->
     db_connect:db_connect(),
     % using lists:flatten/1 because it is always called this way
     ?assertEqual(lists:flatten(lookup_name_list([])), []),
+    ?assertEqual(lists:flatten(lookup_name_list(?TEST_NONDNS_DOMAINS)), []),
     ?assertEqual(lists:flatten(lookup_name_list(?TEST_LOOKUP_DOMAINS)), [{"lolware.net","technion@lolware.net"}]).
 -endif.
