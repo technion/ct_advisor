@@ -1,5 +1,6 @@
 % Several EUnit tests involve very long strings. Define them here to keep 
 % main source clean.
+-define(TEST_LOOKUP_DOMAINS, [{dNSName,"lolware.net"},{dNSName,"www.lolware.net"}]).
 -define(TEST_ENUMERATED_DOMAINS, [[{dNSName,"lolware.net"},{dNSName,"www.lolware.net"}], [{dNSName,"owncloud.forfor.ch"}]]).
 -define(TEST_STH, "{\"tree_size\":9910235,\"timestamp\":1448090100891,\"sha256_root_hash\":\"f/yL52udFFrqHzwxLZwpWKbBV1PxlqlanZ7dTT+3Ylo=\",\"tree_head_signature\":\"BAMARzBFAiEAiBAlcFyk8a0wz5KdWugGbZL+DZ8gXq7gKDoiu+eDbcICIFrNiPLM/oHPDTge3B7XsXmiYf/kaCp96+BbFt30sj4o\"}").
 -define(TEST_DOMAIN_LIST, [{dNSName,"lolware.net"},{dNSName,"www.lolware.net"}]).

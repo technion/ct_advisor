@@ -13,7 +13,8 @@ per_cert_domains(Domains) ->
     [] ->
         ok;
     Alerts ->
-        lager:notice("We have an alert for ~p with cert ~p~n", [Alerts, Domains])
+        lager:notice("We have an alert for ~p with cert ~p~n", [Alerts, Domains]),
+        ok
     end.
 
 -spec lookup_name_list([{'dNSName',_}]) -> [[] | {_,_}].
@@ -21,13 +22,24 @@ lookup_name_list([]) ->
     [];
 
 lookup_name_list([{dNSName, Name}|Tail]) ->
-    %Match = "Name " ++ Name ++ "is matching",
-    Match = case ets:lookup(users, Name) of
-    [{Name, User}] ->
-        {Name, User};
+    [{connector, C}] = ets:lookup(db, connector),
+    {ok, _Columns, Rows} = epgsql:equery(C,
+            "SELECT email FROM domains WHERE domain = $1", [Name]),
+    Match = case Rows of
+    [{User}] ->
+        {Name, binary_to_list(User)};
     _ ->
         []
     end,
     [Match|lookup_name_list(Tail)].
 
-    
+-ifdef(TEST). 
+-include_lib("eunit/include/eunit.hrl"). 
+-include("test_constants.hrl"). 
+
+lookup_name_list_test() ->
+    db_connect:db_connect(),
+    % using lists:flatten/1 because it is always called this way
+    ?assertEqual(lists:flatten(lookup_name_list([])), []),
+    ?assertEqual(lists:flatten(lookup_name_list(?TEST_LOOKUP_DOMAINS)), [{"lolware.net","technion@lolware.net"}]).
+-endif.
