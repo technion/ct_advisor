@@ -5,13 +5,15 @@
   {mod, {'ct_advisor_app', []}},
   {applications,
    [kernel,
+    ssl,
     stdlib,
     ibrowse,
+    jiffy,
+    epgsql,
     lager
    ]},
   {env,[]},
   {modules, [ ]},
-
   {contributors, []},
   {licenses, []},
   {links, []}

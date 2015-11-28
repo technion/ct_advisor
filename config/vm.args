@@ -1,6 +1,7 @@
 -sname ct_advisor
 
 -setcookie ct_advisor_cookie
+-env ERL_EPMD_ADDRESS 127.0.0.1
 
 +K true
 +A30
