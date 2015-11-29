@@ -1,10 +1,15 @@
 -module(db_connect).
 -export([db_connect/0]).
 
+-record(credentials, {hostname, username, password}).
+
 db_connect() ->
+    {ok, [Creds|_Empty]} = file:consult("priv/credentials.rr"),
     db = ets:new(db, [ named_table, public, {read_concurrency, true}]),
-    {ok, C} = epgsql:connect("localhost", "ct_advisor", "erwgreg87uyt$",
-            [{database, "ct_advisor"}, {timeout, 4000}]), % Password will be changed by the time you see this in github. Don't waste your time..
+    {ok, C} = epgsql:connect(Creds#credentials.hostname, 
+            Creds#credentials.username, Creds#credentials.password,
+            [{database, "ct_advisor"}, {timeout, 4000}]),
     ets:insert(db, {connector, C}),
-    lager:info("Connection to database started: ~p", [C]).
+    lager:info("Connection to database started: ~p", [C]),
+    ok.
 

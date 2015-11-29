@@ -13,6 +13,17 @@ Build
     $ ./rebar3 compile
     $ /.rebar3 shell
 
+Database
+--------
+
+This application uses a PostgreSQL database.
+
+- Install PostgreSQL and create a database
+- Run createtables.sql
+- Create priv/credentials.rr in the following format:
+
+    {credentials, "localhost", "ct_advisor", "PASSWORDHERE"}.
+
 In development
 --------------
 More documentation to be written as the project takes shape. Current status:
