@@ -2,18 +2,22 @@
 -export([scheduled_check/0]).
 %enumberate_ids/2 is not a programatically required export.
 % It is often required for debugging however.
--export([enumerate_ids/2]). 
+%-export([enumerate_ids/2]).
 
+%% The entry function. This checks the latest recorded certificate and fires
+%% processing based on that.
 -spec scheduled_check() -> 'ok'.
 scheduled_check() ->
     STH = ct_fetch:fetch_sth(),
     Latest = ct_fetch:parse_sth(STH),
     lookup_updates(Latest).
 
+% Compares the input STH with the last checked value based on database lookup.
+% Calls new checks as appropriate.
 -spec lookup_updates(_) -> 'ok'.
 lookup_updates(Latest) ->
     [{connector, C}] = ets:lookup(db, connector),
-    {ok, _Columns, Rows} = epgsql:equery(C,"SELECT latest FROM STH"),
+    {ok, _Columns, Rows} = epgsql:equery(C, "SELECT latest FROM STH"),
     case Rows of
     [{LastLookup}] when Latest > LastLookup ->
         lager:info("Performing checks: ~B~n", [Latest]),
@@ -25,17 +29,21 @@ lookup_updates(Latest) ->
         noupdate
     end.
 
--spec run_checks(number(),number()) -> [any(),...].
+%% Downloads and parses a a range of certificate id's, updates
+%% last checked value in database
+-spec run_checks(number(), number()) -> [any(), ...].
 run_checks(LOW, HIGH) ->
     {FROM, TO} = get_range(LOW, HIGH),
     lager:info("Running between: ~B and ~B~n", [FROM, TO]),
     Domains = enumerate_ids(FROM, TO),
     [{connector, C}] = ets:lookup(db, connector),
-    {ok, 1} = epgsql:equery(C,"UPDATE sth SET latest = $1", [TO+1]),
+    {ok, 1} = epgsql:equery(C, "UPDATE sth SET latest = $1", [TO+1]),
     domain_parse:cert_domain_list(Domains),
     Domains.
 
--spec get_range(number(),number()) -> {number(),number()}.
+%% Rate limiting function - if a range is higher than a configured
+%% value - reduce the range.
+-spec get_range(number(), number()) -> {number(), number()}.
 get_range(LOW, HIGH) when HIGH > LOW ->
     % Note the highest lookup should be STH -1
     % We also rate limit lookups per run
@@ -45,7 +53,9 @@ get_range(LOW, HIGH) when HIGH > LOW ->
     _Diff ->
         {LOW, HIGH-1}
     end.
-        
+
+%% Will fetch a certifcicate and use the various parsing functions to
+%% extract a list of domains on that certificate.
 -spec get_domain_from_id(_) -> any().
 get_domain_from_id(ID) ->
     LeafEntry =  ct_fetch:fetch_entry(ID),
@@ -58,7 +68,7 @@ get_domain_from_id(ID) ->
         []
     end.
 
--spec enumerate_ids(_,_) -> [any(),...].
+-spec enumerate_ids(_, _) -> [any(), ...].
 enumerate_ids(ID, ID) ->
     [get_domain_from_id(ID)];
 

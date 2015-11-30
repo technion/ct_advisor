@@ -3,6 +3,7 @@
 
 -define(CT_LOG, "https://ct.googleapis.com/aviator").
 
+%% Connect to the REST API and fetch the JSON entry for a particular node
 -spec fetch_entry(pos_integer()) -> any().
 fetch_entry(X) ->
     Xi = integer_to_list(X),
@@ -11,12 +12,15 @@ fetch_entry(X) ->
         ibrowse:send_req(URL, [], get),
     Content.
 
+%% Connect to the REST API and obtain the "sth", which is the total count
+%% of certificates currently logged with the monitor.
 -spec fetch_sth() -> any().
 fetch_sth() ->
-    {ok, "200", _Headers, Content} = 
+    {ok, "200", _Headers, Content} =
         ibrowse:send_req(?CT_LOG ++ "/ct/v1/get-sth", [], get),
     Content.
 
+%% Extract the sth counter from the JSON response
 -spec parse_sth(_) -> any().
 parse_sth(JSON) ->
     {STH} = jiffy:decode(JSON),

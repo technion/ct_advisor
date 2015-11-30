@@ -7,17 +7,19 @@ cert_domain_list(Domains) ->
     lists:foreach(fun(X) -> per_cert_domains(X) end, Domains).
 
 % A list of domains for an individual certificate
--spec per_cert_domains([{'dNSName',_}]) -> 'ok'.
+-spec per_cert_domains([{'dNSName', _}]) -> 'ok'.
 per_cert_domains(Domains) ->
     case lists:flatten(lookup_name_list(Domains)) of
     [] ->
         ok;
     Alerts ->
-        lager:notice("We have an alert for ~p with cert ~p~n", [Alerts, Domains]),
+        lager:notice("We have an alert for ~p with cert ~p~n",
+                [Alerts, Domains]),
         ok
     end.
 
--spec lookup_name_list([{atom(),_}]) -> [[] | {_,_}].
+%% For a given domain name - check if it's registered in the datbaase
+-spec lookup_name_list([{atom(), _}]) -> [[] | {_, _}].
 lookup_name_list([]) ->
     [];
 
@@ -37,9 +39,9 @@ lookup_name_list([{_, _Name}|Tail]) ->
     %TIL: There are other types of subject names - see test suite
     [lookup_name_list(Tail)].
 
--ifdef(TEST). 
--include_lib("eunit/include/eunit.hrl"). 
--include("test_constants.hrl"). 
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+-include("test_constants.hrl").
 lookup_fixture_test_() ->
     {setup, fun connect/0, fun teardown/1, fun lookup_name_listi/0}.
 
