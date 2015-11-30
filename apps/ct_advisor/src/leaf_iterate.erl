@@ -12,13 +12,17 @@ scheduled_check() ->
 
 -spec lookup_updates(_) -> 'ok'.
 lookup_updates(Latest) ->
-    case ets:lookup(sth, latest) of
-    [{latest, LastLookup}] when Latest > LastLookup ->
+    [{connector, C}] = ets:lookup(db, connector),
+    {ok, _Columns, Rows} = epgsql:equery(C,"SELECT latest FROM STH"),
+    case Rows of
+    [{LastLookup}] when Latest > LastLookup ->
         lager:info("Performing checks: ~B~n", [Latest]),
         Domains = run_checks(LastLookup, Latest),
-        lager:info("Domains to verify: ~p~n", [Domains]);
+        lager:info("Domains to verify: ~p~n", [Domains]),
+        updated;
     _ ->
-        lager:debug("No updates, latest still: ~B~n", [Latest])
+        lager:debug("No updates, latest still: ~B~n", [Latest]),
+        noupdate
     end.
 
 -spec run_checks(number(),number()) -> [any(),...].
@@ -26,7 +30,8 @@ run_checks(LOW, HIGH) ->
     {FROM, TO} = get_range(LOW, HIGH),
     lager:info("Running between: ~B and ~B~n", [FROM, TO]),
     Domains = enumerate_ids(FROM, TO),
-    ets:insert(sth, {latest, TO+1}),
+    [{connector, C}] = ets:lookup(db, connector),
+    {ok, 1} = epgsql:equery(C,"UPDATE sth SET latest = $1", [TO+1]),
     domain_parse:cert_domain_list(Domains),
     Domains.
 
@@ -64,28 +69,26 @@ enumerate_ids(FROM, TO) when FROM < TO ->
 -include_lib("eunit/include/eunit.hrl").
 -include("test_constants.hrl").
 
-iterator_test() ->
-    {setup, fun setup_table/0, fun teardown/1, [fun ranges/0,
-        fun lookup/0, fun enumerate/0]}.
+lookup_fixture_test_() ->
+    {setup, fun connect/0, fun teardown/1, fun lookup/0}.
 
-setup_table() ->
-    sth = ets:new(sth, [ named_table, public, {read_concurrency, true}]),
-    users = ets:new(users, [ named_table, public, {read_concurrency, true}]),
-    ets:insert(sth, {latest, 1024}). %Generally random starting example
+connect() ->
+    db_connect:db_connect(),
+    [{connector, C}] = ets:lookup(db, connector),
+    C.
 
-teardown(_) ->
-    ets:delete(sth),
-    ets:delete(users).
+teardown(C) ->
+    epgsql:close(C),
+    ets:delete(db).
 
-ranges() ->
+ranges_test() ->
     ?assertEqual({7, 7}, get_range(7, 8)),
     ?assertEqual({7, 39}, get_range(7, 107)).
 
 lookup() ->
-    lookup_updates(1025),
-    ?assertEqual([{latest,1025}], ets:lookup(sth, latest)).
+    ?assertEqual(noupdate, lookup_updates(1025)).
 
-enumerate() ->
+enumerate_test() ->
     ?assertEqual(?TEST_ENUMERATED_DOMAINS, enumerate_ids(9742371 , 9742372)).
 
 -endif.

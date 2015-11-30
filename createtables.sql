@@ -5,3 +5,8 @@ CREATE TABLE domains (
 
 INSERT INTO domains (domain, email) VALUES ('technion@lolware.net', 'lolware.net');
 
+CREATE TABLE sth (
+    latest INTEGER CONSTRAINT sthpk PRIMARY KEY
+);
+
+INSERT INTO sth (latest) VALUES (10055709);

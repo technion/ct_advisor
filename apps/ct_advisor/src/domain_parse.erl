@@ -40,9 +40,19 @@ lookup_name_list([{_, _Name}|Tail]) ->
 -ifdef(TEST). 
 -include_lib("eunit/include/eunit.hrl"). 
 -include("test_constants.hrl"). 
+lookup_fixture_test_() ->
+    {setup, fun connect/0, fun teardown/1, fun lookup_name_listi/0}.
 
-lookup_name_list_test() ->
+connect() ->
     db_connect:db_connect(),
+    [{connector, C}] = ets:lookup(db, connector),
+    C.
+
+teardown(C) ->
+    epgsql:close(C),
+    ets:delete(db).
+
+lookup_name_listi() ->
     % using lists:flatten/1 because it is always called this way
     ?assertEqual(lists:flatten(lookup_name_list([])), []),
     ?assertEqual(lists:flatten(lookup_name_list(?TEST_NONDNS_DOMAINS)), []),

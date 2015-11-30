@@ -14,15 +14,7 @@
 %%====================================================================
 %% API
 %%====================================================================
-setup_db() ->
-    STH = ct_fetch:fetch_sth(), % TODO: Use previously saved disk value
-    Latest = ct_fetch:parse_sth(STH),
-    sth = ets:new(sth, [ named_table, public, {read_concurrency, true}]),
-    ets:insert(sth, {latest, Latest}),
-    io:fwrite("First lookup: ~B~n", [Latest]).
-
 start(_StartType, _StartArgs) ->
-    setup_db(),
     db_connect:db_connect(),
     lager:set_loglevel(lager_console_backend, debug), % Debugging
     scheduler:start_link(),
@@ -31,6 +23,8 @@ start(_StartType, _StartArgs) ->
 %%--------------------------------------------------------------------
 stop(_State) ->
     [{connector, C}] = ets:lookup(db, connector),
+    ok = epgsql:close(C),
+    ets:delete(db),
     lager:info("Connection to database shutdown: ~p", [C]),
     ok.
 
