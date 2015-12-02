@@ -6,7 +6,7 @@
 
 %% The entry function. This checks the latest recorded certificate and fires
 %% processing based on that.
--spec scheduled_check() -> 'ok'.
+-spec scheduled_check() -> 'noupdate' | 'updated'.
 scheduled_check() ->
     STH = ct_fetch:fetch_sth(),
     Latest = ct_fetch:parse_sth(STH),
@@ -14,7 +14,7 @@ scheduled_check() ->
 
 % Compares the input STH with the last checked value based on database lookup.
 % Calls new checks as appropriate.
--spec lookup_updates(_) -> 'ok'.
+-spec lookup_updates(_) -> 'noupdate' | 'updated'.
 lookup_updates(Latest) ->
     [{connector, C}] = ets:lookup(db, connector),
     {ok, _Columns, Rows} = epgsql:equery(C, "SELECT latest FROM STH"),

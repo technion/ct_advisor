@@ -6,7 +6,8 @@
 %% Establishes a connection to Postgresql.
 %% Creates an ETS table to record the connection PID
 db_connect() ->
-    {ok, [Creds|_Empty]} = file:consult("priv/credentials.rr"),
+    {ok, Config} = file:consult("priv/credentials.rr"),
+    Creds = proplists:get_value(database, Config),
     db = ets:new(db, [ named_table, public, {read_concurrency, true}]),
     {ok, C} = epgsql:connect(Creds#credentials.hostname,
             Creds#credentials.username, Creds#credentials.password,

@@ -22,7 +22,10 @@ This application uses a PostgreSQL database.
 - Run createtables.sql
 - Create priv/credentials.rr in the following format:
 
-    {credentials, "localhost", "ct_advisor", "PASSWORDHERE"}.
+    {database, {credentials, "localhost", "ct_advisor", "password"}}.
+    {smtp, {credentials, "email-relay.com", "username", "password"}}.
+
+
 
 In development
 --------------
@@ -36,8 +39,8 @@ More documentation to be written as the project takes shape. Current status:
 - [x] Eunit Test suite
 - [x] Logging framework
 - [x] Persist last lookup state across restarts
-- [ ] Code audit, cleanup, review
-- [ ] Actually email out alerts
+- [x] Code audit, cleanup, review
+- [x] Actually email out alerts
 - [ ] Management interface for user/domain listing
 - [ ] Common Test
 - [ ] Document public access

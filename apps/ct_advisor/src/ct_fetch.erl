@@ -1,5 +1,5 @@
 -module(ct_fetch).
--compile([debug_info, export_all]).
+-export([fetch_entry/1, fetch_sth/0, parse_sth/1]).
 
 -define(CT_LOG, "https://ct.googleapis.com/aviator").
 

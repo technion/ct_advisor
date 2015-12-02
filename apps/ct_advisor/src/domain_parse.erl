@@ -13,8 +13,7 @@ per_cert_domains(Domains) ->
     [] ->
         ok;
     Alerts ->
-        lager:notice("We have an alert for ~p with cert ~p~n",
-                [Alerts, Domains]),
+        ct_mail_alert:send_alert(Alerts, Domains),
         ok
     end.
 
