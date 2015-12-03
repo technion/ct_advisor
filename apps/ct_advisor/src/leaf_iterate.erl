@@ -37,8 +37,8 @@ run_checks(LOW, HIGH) ->
     lager:info("Running between: ~B and ~B~n", [FROM, TO]),
     Domains = enumerate_ids(FROM, TO),
     [{connector, C}] = ets:lookup(db, connector),
-    {ok, 1} = epgsql:equery(C, "UPDATE sth SET latest = $1", [TO+1]),
     domain_parse:cert_domain_list(Domains),
+    {ok, 1} = epgsql:equery(C, "UPDATE sth SET latest = $1", [TO+1]),
     Domains.
 
 %% Rate limiting function - if a range is higher than a configured
@@ -54,21 +54,21 @@ get_range(LOW, HIGH) when HIGH > LOW ->
         {LOW, HIGH-1}
     end.
 
-%% Will fetch a certifcicate and use the various parsing functions to
+%% Will fetch a certificate and use the various parsing functions to
 %% extract a list of domains on that certificate.
--spec get_domain_from_id(_) -> any().
+-spec get_domain_from_id(pos_integer()) -> any().
 get_domain_from_id(ID) ->
     LeafEntry =  ct_fetch:fetch_entry(ID),
     MTL = leaf_parse:parse_leaf(LeafEntry),
     try leaf_parse:xparse(MTL) of
     X509 ->
-        leaf_parse:get_subjects(X509)
+        leaf_parse:get_subjects(X509) ++ [{ctid, ID}]
     catch
     _:_ ->
         []
     end.
 
--spec enumerate_ids(_, _) -> [any(), ...].
+-spec enumerate_ids(pos_integer(), pos_integer()) -> [any(), ...].
 enumerate_ids(ID, ID) ->
     [get_domain_from_id(ID)];
 

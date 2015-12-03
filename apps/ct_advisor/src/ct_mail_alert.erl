@@ -5,8 +5,9 @@
 
 %% Issues an email alert.
 
--spec send_alert([{string(), string()}], [tuple()]) -> {'ok',pid()}.
-send_alert([{Domain, User}], Certificate) ->
+-spec send_alert([{string(), string()}], [tuple()], {ctid, pos_integer()}) ->
+    {'ok',pid()}.
+send_alert([{Domain, User}], Certificate, {ctid, ID}) ->
     lager:notice("We have an alert for ~p, ~p with cert ~p~n",
         [Domain, User, Certificate]),
     {ok, Config} = file:consult("priv/credentials.rr"),
@@ -16,7 +17,8 @@ send_alert([{Domain, User}], Certificate) ->
         "From: ctadvisor@lolware.net\r\nTo: " ++ User ++ "\r\n\r\n"
         "ct_advisor has detected the issuance of an SSL certificate for domain "
         ++ Domain ++ " for which you are registered. If this was not you, you"
-        " may wish to investigate."},
+        " may wish to investigate. You can obtain further information "
+        "by looking up this ID: " ++ integer_to_list(ID)},
         [{relay, Creds#credentials.hostname},
         {username, Creds#credentials.username},
         {password, Creds#credentials.password}, {port, 587} ]),
@@ -29,7 +31,8 @@ send_bouncemail_test() ->
     % AWS SES will still accept a bounce - but should generate an alert to SNS
     {T, Pid} = send_alert([{"lolwaretest.net",
             "bounce@simulator.amazonses.com"}],
-            [{dNSName, "www.lolwaretest.net"}, {dNSName, "lolwaretest.net"}]),
+            [{dNSName, "www.lolwaretest.net"}, {dNSName, "lolwaretest.net"}],
+            {ctid, 9742372}),
     ?assertEqual(ok, T),
     unlink(Pid),
     Monitor = erlang:monitor(process, Pid),
@@ -47,7 +50,8 @@ send_mail_test() ->
     % we assume we can succeed.
     {T, Pid} = send_alert([{"lolwaretest.net",
             "success@simulator.amazonses.com"}],
-            [{dNSName, "www.lolwaretest.net"}, {dNSName, "lolwaretest.net"}]),
+            [{dNSName, "www.lolwaretest.net"}, {dNSName, "lolwaretest.net"}],
+            {ctid, 9742372}),
     ?assertEqual(ok, T),
     unlink(Pid),
     Monitor = erlang:monitor(process, Pid),

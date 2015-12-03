@@ -8,12 +8,14 @@ cert_domain_list(Domains) ->
 
 % A list of domains for an individual certificate
 -spec per_cert_domains([{'dNSName', _}]) -> 'ok'.
-per_cert_domains(Domains) ->
+per_cert_domains(DomainsID) ->
+    ID = proplists:lookup(ctid, DomainsID),
+    Domains = proplists:delete(ctid, DomainsID),
     case lists:flatten(lookup_name_list(Domains)) of
     [] ->
         ok;
     Alerts ->
-        ct_mail_alert:send_alert(Alerts, Domains),
+        ct_mail_alert:send_alert(Alerts, Domains, ID),
         ok
     end.
 
