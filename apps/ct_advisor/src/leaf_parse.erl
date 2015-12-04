@@ -32,12 +32,23 @@ get_subjects(Cert) ->
         FirstNameExtension#'Extension'.extnValue
     end.
 
+-spec get_serial(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{serialNumber::integer()}}) -> {'serial',string()}.
+get_serial(Cert) ->
+    Serial = Cert#'OTPCertificate'.tbsCertificate#'OTPTBSCertificate'
+        .serialNumber,
+    {serial, integer_to_list(Serial, 16)}.
+
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
 -include("test_constants.hrl").
 %All tests based upon ID 9742371 - lolware.net
 parse_leaf_test() ->
     ?assertEqual(?TEST_MTL, parse_leaf(?TEST_LEAF_ENTRY)).
+
+get_serial_test() ->
+    X509 = leaf_parse:xparse(?TEST_MTL),
+    ?assertEqual({serial, "19F169D2A081E71A79CE2219220D0B582D6"},
+        get_serial(X509)).
 
 mtl_to_subjects_test() ->
     X509 = leaf_parse:xparse(?TEST_MTL),

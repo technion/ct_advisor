@@ -62,7 +62,7 @@ get_domain_from_id(ID) ->
     MTL = leaf_parse:parse_leaf(LeafEntry),
     try leaf_parse:xparse(MTL) of
     X509 ->
-        leaf_parse:get_subjects(X509) ++ [{ctid, ID}]
+        leaf_parse:get_subjects(X509) ++ [leaf_parse:get_serial(X509)]
     catch
     _:_ ->
         []
