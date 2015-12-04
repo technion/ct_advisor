@@ -32,7 +32,7 @@ get_subjects(Cert) ->
         FirstNameExtension#'Extension'.extnValue
     end.
 
--spec get_serial(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{serialNumber::integer()}}) -> {'serial',string()}.
+-spec get_serial(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{serialNumber::integer()}}) -> {'serial', string()}.
 get_serial(Cert) ->
     Serial = Cert#'OTPCertificate'.tbsCertificate#'OTPTBSCertificate'
         .serialNumber,

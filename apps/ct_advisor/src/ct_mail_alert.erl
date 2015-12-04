@@ -6,7 +6,7 @@
 %% Issues an email alert.
 
 -spec send_alert([{string(), string()}], [tuple()], {serial, string()}) ->
-    {'ok',pid()}.
+    {'ok', pid()}.
 send_alert([{Domain, User}], Certificate, {serial, Serial}) ->
     lager:notice("We have an alert for ~p, ~p with cert ~p~n",
         [Domain, User, Certificate]),
@@ -18,7 +18,8 @@ send_alert([{Domain, User}], Certificate, {serial, Serial}) ->
         "ct_advisor has detected the issuance of an SSL certificate for domain "
         ++ Domain ++ " for which you are registered. If this was not you, you"
         " may wish to investigate. You can obtain further information "
-        "by looking up this ID: " ++ Serial},
+        "by reviewing the issued certificate here: https://crt.sh/?serial="
+        ++ Serial},
         [{relay, Creds#credentials.hostname},
         {username, Creds#credentials.username},
         {password, Creds#credentials.password}, {port, 587} ]),
@@ -32,7 +33,7 @@ send_bouncemail_test() ->
     {T, Pid} = send_alert([{"lolwaretest.net",
             "bounce@simulator.amazonses.com"}],
             [{dNSName, "www.lolwaretest.net"}, {dNSName, "lolwaretest.net"}],
-            {serial,"19F169D2A081E71A79CE2219220D0B582D6"}),
+            {serial, "19F169D2A081E71A79CE2219220D0B582D6"}),
     ?assertEqual(ok, T),
     unlink(Pid),
     Monitor = erlang:monitor(process, Pid),
@@ -51,7 +52,7 @@ send_mail_test() ->
     {T, Pid} = send_alert([{"lolwaretest.net",
             "success@simulator.amazonses.com"}],
             [{dNSName, "www.lolwaretest.net"}, {dNSName, "lolwaretest.net"}],
-            {serial,"19F169D2A081E71A79CE2219220D0B582D6"}),
+            {serial, "19F169D2A081E71A79CE2219220D0B582D6"}),
     ?assertEqual(ok, T),
     unlink(Pid),
     Monitor = erlang:monitor(process, Pid),
