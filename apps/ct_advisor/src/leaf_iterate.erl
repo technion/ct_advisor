@@ -2,7 +2,7 @@
 -export([scheduled_check/0]).
 %enumberate_ids/2 is not a programatically required export.
 % It is often required for debugging however.
-%-export([enumerate_ids/2]).
+-export([enumerate_ids/2]).
 
 %% The entry function. This checks the latest recorded certificate and fires
 %% processing based on that.
@@ -22,7 +22,6 @@ lookup_updates(Latest) ->
     [{LastLookup}] when Latest > LastLookup ->
         lager:info("Performing checks: ~B~n", [Latest]),
         Domains = run_checks(LastLookup, Latest),
-        lager:info("Domains to verify: ~p~n", [Domains]),
         updated;
     _ ->
         lager:debug("No updates, latest still: ~B~n", [Latest]),
@@ -36,8 +35,10 @@ run_checks(LOW, HIGH) ->
     {FROM, TO} = get_range(LOW, HIGH),
     lager:info("Running between: ~B and ~B~n", [FROM, TO]),
     Domains = enumerate_ids(FROM, TO),
+    % This task can involve delays, spawning here makes this work somewhat
+    % asynchronous.
+    spawn(domain_parse, cert_domain_list, [Domains]),
     [{connector, C}] = ets:lookup(db, connector),
-    domain_parse:cert_domain_list(Domains),
     {ok, 1} = epgsql:equery(C, "UPDATE sth SET latest = $1", [TO+1]),
     Domains.
 

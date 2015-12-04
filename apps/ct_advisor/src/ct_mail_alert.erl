@@ -1,5 +1,5 @@
 -module(ct_mail_alert).
--compile([debug_info, export_all]).
+-export([send_alert/3]).
 
 -record(credentials, {hostname, username, password}).
 

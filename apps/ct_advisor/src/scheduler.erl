@@ -25,11 +25,13 @@ start_link() ->
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
--define(INTERVAL, 60000).
+-define(INTERVAL, 30000).
 
-init(Args) ->
+init(_Args) ->
     erlang:send_after(?INTERVAL, self(), scheduler),
-    {ok, Args}.
+    % This hack just gives us a valid PID to set as the first State
+    Pid = spawn(fun() -> lager:debug("Initializing scheduler") end),
+    {ok, Pid}.
 
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
@@ -38,9 +40,16 @@ handle_cast(_Msg, State) ->
     {noreply, State}.
 
 handle_info(scheduler, State) ->
-    spawn(leaf_iterate, scheduled_check, []),
+    Pid = case process_info(State) of
+    undefined ->
+        spawn(leaf_iterate, scheduled_check, []);
+    _ ->
+        lager:debug("Process ~p already running, sleeping", [State]),
+        State
+    end,
     erlang:send_after(?INTERVAL, self(), scheduler),
-    {noreply, State};
+    {noreply, Pid};
+
 handle_info(_Info, State) ->
     {noreply, State}.
 

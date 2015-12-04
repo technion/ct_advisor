@@ -1,5 +1,5 @@
 -module(leaf_parse).
--compile([debug_info, export_all]).
+-export([parse_leaf/1, xparse/1, get_subjects/1, get_serial/1]).
 
 -include_lib("public_key/include/public_key.hrl").
 

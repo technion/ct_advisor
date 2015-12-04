@@ -4,6 +4,7 @@
 % A list of certificates with a list of names
 -spec cert_domain_list([any()]) -> 'ok'.
 cert_domain_list(Domains) ->
+    lager:info("Domain list for review: ~p" ,[Domains]),
     lists:foreach(fun(X) -> per_cert_domains(X) end, Domains).
 
 % A list of domains for an individual certificate
