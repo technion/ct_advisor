@@ -3,7 +3,7 @@ ct_advisor
 
 ct_advisor is a monitoring tool for [Google's Certificate Transparency](https://www.certificate-transparency.org/).
 
-Google offers a number of great options for an administrator to utilise this feature. Unfortunately in a lot of cases, existing infrastructure, particularly if you run Windows servers, makes this difficult.
+Google offers a number of great options for an administrator to utilise this feature. Unfortunately being an early adopter in a lot of cases, particularly if you run Windows servers, makes this difficult.
 
 As an alternative option, this service continually polls the CT log, and will trigger alerts if a certificate is ever registered for your domain, by any CA in the CT program. This can be used to identify fraudulent certificates.
 
