@@ -39,7 +39,7 @@ fetch_sth_test() ->
     ibrowse:start(),
     fetch_sth().
 
-parse_sth() ->
+parse_sth_test() ->
     ?assertEqual(parse_sth(?TEST_STH), 9910235).
 -endif.
 
