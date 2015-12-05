@@ -38,12 +38,7 @@ run_checks(LOW, HIGH) ->
     % asynchronous.
     spawn(domain_parse, cert_domain_list, [Domains]),
     NewHigh = TO + 1,
-    case pgapp:equery("UPDATE sth SET latest = $1", [NewHigh]) of
-    {ok, 1} ->
-        ok;
-    X ->
-        lager:error("THIS KILLS THE MAN ~p, ~p", [TO+1, X])
-    end,
+    {ok, 1} = pgapp:equery("UPDATE sth SET latest = $1", [NewHigh]),
     Domains.
 
 %% Rate limiting function - if a range is higher than a configured

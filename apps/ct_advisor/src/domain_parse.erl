@@ -26,14 +26,8 @@ lookup_name_list([]) ->
     [];
 
 lookup_name_list([{dNSName, Name}|Tail]) ->
-    Rows = case pgapp:equery(
-        "SELECT email FROM domains WHERE domain = $1", [Name]) of
-    {ok, _Columns, RetRows} ->
-        RetRows;
-    X ->
-        lager:error("This kills the man ~p, ~p, ~p", [Name, Tail, X]),
-        []
-    end,
+    {ok, _Columns, Rows} = pgapp:equery(
+        "SELECT email FROM domains WHERE domain = $1", [Name]),
     Match = case Rows of
     [{User}] ->
         {Name, binary_to_list(User)};
