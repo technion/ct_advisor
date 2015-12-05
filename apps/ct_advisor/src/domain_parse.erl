@@ -26,9 +26,14 @@ lookup_name_list([]) ->
     [];
 
 lookup_name_list([{dNSName, Name}|Tail]) ->
-    [{connector, C}] = ets:lookup(db, connector),
-    {ok, _Columns, Rows} = epgsql:equery(C,
-            "SELECT email FROM domains WHERE domain = $1", [Name]),
+    Rows = case pgapp:equery(
+        "SELECT email FROM domains WHERE domain = $1", [Name]) of
+    {ok, _Columns, RetRows} ->
+        RetRows;
+    X ->
+        lager:error("This kills the man ~p, ~p, ~p", [Name, Tail, X]),
+        []
+    end,
     Match = case Rows of
     [{User}] ->
         {Name, binary_to_list(User)};
@@ -48,13 +53,12 @@ lookup_fixture_test_() ->
     {setup, fun connect/0, fun teardown/1, fun lookup_name_listi/0}.
 
 connect() ->
+    application:ensure_all_started(pgapp),
     db_connect:db_connect(),
-    [{connector, C}] = ets:lookup(db, connector),
-    C.
+    ok.
 
-teardown(C) ->
-    epgsql:close(C),
-    ets:delete(db).
+teardown(_C) ->
+    application:stop(pgapp).
 
 lookup_name_listi() ->
     % using lists:flatten/1 because it is always called this way

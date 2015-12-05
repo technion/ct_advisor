@@ -8,11 +8,23 @@
 db_connect() ->
     {ok, Config} = file:consult("priv/credentials.rr"),
     Creds = proplists:get_value(database, Config),
-    db = ets:new(db, [ named_table, public, {read_concurrency, true}]),
-    {ok, C} = epgsql:connect(Creds#credentials.hostname,
-            Creds#credentials.username, Creds#credentials.password,
-            [{database, "ct_advisor"}, {timeout, 4000}]),
-    ets:insert(db, {connector, C}),
+    {ok, C} = pgapp:connect([{size, 5}, 
+            {hostname, Creds#credentials.hostname},
+            {username, Creds#credentials.username},
+            {password, Creds#credentials.password},
+            {database, "ct_advisor"}]),
     lager:info("Connection to database started: ~p", [C]),
     ok.
+    
+-ifdef(TEST).
+-include_lib("eunit/include/eunit.hrl").
+-include("test_constants.hrl"). 
+
+db_connect_test() ->
+    application:ensure_all_started(pgapp),
+    db_connect(),
+    application:stop(pgapp).
+
+-endif.
+ 
 

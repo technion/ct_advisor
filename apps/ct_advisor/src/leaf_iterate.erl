@@ -14,14 +14,13 @@ scheduled_check() ->
 
 % Compares the input STH with the last checked value based on database lookup.
 % Calls new checks as appropriate.
--spec lookup_updates(_) -> 'noupdate' | 'updated'.
+-spec lookup_updates(pos_integer()) -> 'noupdate' | 'updated'.
 lookup_updates(Latest) ->
-    [{connector, C}] = ets:lookup(db, connector),
-    {ok, _Columns, Rows} = epgsql:equery(C, "SELECT latest FROM STH"),
+    {ok, _Columns, Rows} = pgapp:equery("SELECT latest FROM STH", []),
     case Rows of
     [{LastLookup}] when Latest > LastLookup ->
         lager:info("Performing checks: ~B~n", [Latest]),
-        Domains = run_checks(LastLookup, Latest),
+        run_checks(LastLookup, Latest),
         updated;
     _ ->
         lager:debug("No updates, latest still: ~B~n", [Latest]),
@@ -30,7 +29,7 @@ lookup_updates(Latest) ->
 
 %% Downloads and parses a a range of certificate id's, updates
 %% last checked value in database
--spec run_checks(number(), number()) -> [any(), ...].
+-spec run_checks(pos_integer(), pos_integer()) -> [any(), ...].
 run_checks(LOW, HIGH) ->
     {FROM, TO} = get_range(LOW, HIGH),
     lager:info("Running between: ~B and ~B~n", [FROM, TO]),
@@ -38,13 +37,18 @@ run_checks(LOW, HIGH) ->
     % This task can involve delays, spawning here makes this work somewhat
     % asynchronous.
     spawn(domain_parse, cert_domain_list, [Domains]),
-    [{connector, C}] = ets:lookup(db, connector),
-    {ok, 1} = epgsql:equery(C, "UPDATE sth SET latest = $1", [TO+1]),
+    NewHigh = TO + 1,
+    case pgapp:equery("UPDATE sth SET latest = $1", [NewHigh]) of
+    {ok, 1} ->
+        ok;
+    X ->
+        lager:error("THIS KILLS THE MAN ~p, ~p", [TO+1, X])
+    end,
     Domains.
 
 %% Rate limiting function - if a range is higher than a configured
 %% value - reduce the range.
--spec get_range(number(), number()) -> {number(), number()}.
+-spec get_range(pos_integer(), pos_integer()) -> {pos_integer(), pos_integer()}.
 get_range(LOW, HIGH) when HIGH > LOW ->
     % Note the highest lookup should be STH -1
     % We also rate limit lookups per run
@@ -84,13 +88,12 @@ lookup_fixture_test_() ->
     {setup, fun connect/0, fun teardown/1, fun lookup/0}.
 
 connect() ->
-    db_connect:db_connect(),
-    [{connector, C}] = ets:lookup(db, connector),
-    C.
+    application:ensure_all_started(pgapp),
+    db_connect:db_connect().
 
-teardown(C) ->
-    epgsql:close(C),
-    ets:delete(db).
+teardown(_C) ->
+    application:stop(pgapp),
+    ok.
 
 ranges_test() ->
     ?assertEqual({7, 7}, get_range(7, 8)),
