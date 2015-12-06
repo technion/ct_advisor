@@ -27,7 +27,8 @@ lookup_name_list([]) ->
 
 lookup_name_list([{dNSName, Name}|Tail]) ->
     {ok, _Columns, Rows} = pgapp:equery(
-        "SELECT email FROM domains WHERE $1 LIKE domain", [Name]),
+        "SELECT email FROM domains WHERE $1 LIKE domain or domain = $2",
+        [Name, "%." ++ Name]),
     Match = case Rows of
     [{User}] ->
         {Name, binary_to_list(User)};
