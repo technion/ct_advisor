@@ -27,8 +27,8 @@ lookup_name_list([]) ->
 
 lookup_name_list([{dNSName, Name}|Tail]) ->
     {ok, _Columns, Rows} = pgapp:equery(
-        "SELECT email FROM domains WHERE $1 LIKE domain or domain = $2",
-        [Name, "%." ++ Name]),
+            "SELECT email FROM domains where $1 LIKE concat('%.',domain)"
+            " or $1 = domain", [Name]),
     Match = case Rows of
     [{User}] ->
         {Name, binary_to_list(User)};
@@ -58,6 +58,8 @@ teardown(_C) ->
 lookup_name_listi() ->
     % using lists:flatten/1 because it is always called this way
     ?assertEqual(lists:flatten(lookup_name_list([])), []),
-    ?assertEqual(lists:flatten(lookup_name_list(?TEST_NONDNS_DOMAINS)), []),
-    ?assertEqual(lists:flatten(lookup_name_list(?TEST_LOOKUP_DOMAINS)), [{"lolware.net","technion@lolware.net"}]).
+    ?assertEqual([], lists:flatten(lookup_name_list(?TEST_NONDNS_DOMAINS))),
+    ?assertEqual([{"lolware.net","technion@lolware.net"},
+            {"www.lolware.net","technion@lolware.net"}],
+            lists:flatten(lookup_name_list(?TEST_LOOKUP_DOMAINS))).
 -endif.
