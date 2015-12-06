@@ -5,8 +5,10 @@
 
 %% Issues an email alert.
 
--spec send_alert([{string(), string()}], [tuple()], {serial, string()}) ->
-    {'ok', pid()}.
+-spec send_alert([{string(), string()}]|[], [tuple()], {serial, string()}) ->
+    {'ok', pid()}|ok.
+send_alert([], _Certificate, {serial, _Serial}) ->
+    ok;
 send_alert([{Domain, User}|Tail], Certificate, {serial, Serial}) ->
     lager:notice("We have an alert for ~p, ~p with cert ~p~n",
         [Domain, User, Certificate]),
@@ -23,14 +25,7 @@ send_alert([{Domain, User}|Tail], Certificate, {serial, Serial}) ->
         [{relay, Creds#credentials.hostname},
         {username, Creds#credentials.username},
         {password, Creds#credentials.password}, {port, 587} ]),
-    % While it feels more idiomatic, defining send_alert([]..) had numerous
-    % complications.
-    case Tail =/= [] of
-    true ->
-        send_alert(Tail, Certificate, {serial, Serial});
-    _ ->
-        ok
-    end,
+    send_alert(Tail, Certificate, {serial, Serial}),
     {ok, Pid}.
 
 -ifdef(TEST).
