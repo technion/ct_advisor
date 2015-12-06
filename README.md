@@ -53,6 +53,8 @@ It's far easier to utilise my instance of this tool than to attempt to run it yo
 
 The glaring TODO here is a public registration and sign up interface. This has a number of associated problems, such as handling bounces, bots, and considering whether a user actually needs to verify themselves as associated with a domain.
 
+Now that wildcard domain searches are properly fixed and the database format is somewhat locked in, this interface will be coming shortly. In the meantime, please email me requests to be added.
+
 Contributing
 ------------
 
