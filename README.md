@@ -1,7 +1,7 @@
 ct_advisor
 ==========
 
-ct_advisor is a monitoring tool for [Google's Certificate Transparency](https://www.certificate-transparency.org/).
+ct_advisor is a proactive alerting tool for [Google's Certificate Transparency](https://www.certificate-transparency.org/).
 
 Google offers a number of great options for an administrator to utilise this feature. Unfortunately being an early adopter, particularly if you run Windows servers or run SSL on appliances, makes it difficult to take advantage of this service.
 
