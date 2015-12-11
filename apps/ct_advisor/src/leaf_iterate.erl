@@ -6,7 +6,7 @@
 
 %% The entry function. This checks the latest recorded certificate and fires
 %% processing based on that.
--spec scheduled_check() -> 'noupdate' | 'updated'.
+-spec scheduled_check() -> 'noupdate' |  [any(), ...].
 scheduled_check() ->
     STH = ct_fetch:fetch_sth(),
     Latest = ct_fetch:parse_sth(STH),
@@ -14,14 +14,13 @@ scheduled_check() ->
 
 % Compares the input STH with the last checked value based on database lookup.
 % Calls new checks as appropriate.
--spec lookup_updates(pos_integer()) -> 'noupdate' | 'updated'.
+-spec lookup_updates(pos_integer()) -> 'noupdate' |  [any(), ...].
 lookup_updates(Latest) ->
     {ok, _Columns, Rows} = pgapp:equery("SELECT latest FROM STH", []),
     case Rows of
     [{LastLookup}] when Latest > LastLookup ->
         lager:info("Performing checks: ~B~n", [Latest]),
-        run_checks(LastLookup, Latest),
-        updated;
+        run_checks(LastLookup, Latest);
     _ ->
         lager:debug("No updates, latest still: ~B~n", [Latest]),
         noupdate
@@ -37,8 +36,7 @@ run_checks(LOW, HIGH) ->
     % This task can involve delays, spawning here makes this work somewhat
     % asynchronous.
     spawn(domain_parse, cert_domain_list, [Domains]),
-    NewHigh = TO + 1,
-    {ok, 1} = pgapp:equery("UPDATE sth SET latest = $1", [NewHigh]),
+    {ok, 1} = pgapp:equery("UPDATE sth SET latest = $1", [TO + 1]),
     Domains.
 
 %% Rate limiting function - if a range is higher than a configured
