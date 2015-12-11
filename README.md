@@ -3,7 +3,7 @@ ct_advisor
 
 ct_advisor is a monitoring tool for [Google's Certificate Transparency](https://www.certificate-transparency.org/).
 
-Google offers a number of great options for an administrator to utilise this feature. Unfortunately being an early adopter in a lot of cases, particularly if you run Windows servers, makes this difficult.
+Google offers a number of great options for an administrator to utilise this feature. Unfortunately being an early adopter, particularly if you run Windows servers or run SSL on appliances, makes it difficult to take advantage of this service.
 
 As an alternative option, this service continually polls the CT log, and will trigger alerts if a certificate is ever registered for your domain, by any CA in the CT program. This can be used to identify fraudulent certificates.
 
@@ -11,14 +11,13 @@ This image this ct_advisor in action:
 
 ![CT Advisor Email](https://lolware.net/ct_advisor_email.jpg)
 
-Note that monitors are not instant. Some certificates have taken several days to show up in CT monitor logs.
 
 Monitoring your domain
 ----------------------
 
-This application is currently running live as a beta status project. If you would like my server to monitor your domain, please email me your request: technion@lolware.net. Please provide all names to monitor and associated email addresses.
+This application is currently running live on my servers. At this point I consider it stable, whilst noting some database schema changes may occur to facilitate the upcoming front-end project. If you would like my server to monitor your domain in the meantime, please email me your request: technion@lolware.net. Please provide all names to monitor and associated email addresses.
 
-Until this tool is marked "stable" it may go offline at any time.
+Note that monitors are not instant. Some certificates have taken several days to show up in CT monitor logs.
 
 Setup
 -----
@@ -37,23 +36,21 @@ This application uses a PostgreSQL database, and an SMTP server.
 Build
 -----
 
-This application bundles the tested version of rebar3, and will pull its own external dependancies, of which there are several.
+This application bundles the tested version of rebar3, and will pull its own external dependancies, of which there are several. Both eunit and Common Test suites are utilised.
 
 ```shell
 $ ./rebar3 xref
 $ ./rebar3 dialyzer
 $ ./rebar3 eunit
-$ ./rebar3 ct # TODO
+$ ./rebar3 ct
 $ /.rebar3 release
 ```
 
 In development
 --------------
-It's far easier to utilise my instance of this tool than to attempt to run it yourself - I recommend doing so unless you have a particular need.
+It's far easier to utilise my instance of this tool than to attempt to run it yourself - I recommend doing so unless you wish to be involved in development.
 
-The glaring TODO here is a public registration and sign up interface. This has a number of associated problems, such as handling bounces, bots, and considering whether a user actually needs to verify themselves as associated with a domain.
-
-Now that wildcard domain searches are properly fixed and the database format is somewhat locked in, this interface will be coming shortly. In the meantime, please email me requests to be added.
+The glaring TODO here is a public registration and sign up interface. This has a number of associated problems, such as handling bounces, bots, and considering whether a user actually needs to verify themselves as associated with a domain. This project is well underway however and I hope to launch this service soon.
 
 Contributing
 ------------
