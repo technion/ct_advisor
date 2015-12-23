@@ -22,14 +22,16 @@ xparse(MerkleLeafB64) ->
     %% Parses the subjectnames from a certificate.
 -spec get_subjects(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{extensions::[any()]}}) -> any().
 get_subjects(Cert) ->
-    NameExtensions = [Ext || Ext <-
+    try [Ext || Ext <-
         Cert#'OTPCertificate'.tbsCertificate#'OTPTBSCertificate'.extensions,
-        Ext#'Extension'.extnID == {2, 5, 29, 17} ],
-    case NameExtensions of
+        Ext#'Extension'.extnID == {2, 5, 29, 17} ] of
     [] ->
         [];
     [FirstNameExtension| _] ->
         FirstNameExtension#'Extension'.extnValue
+    catch % List will crash on certificates with asn1_NOVALUE
+    error:function_clause ->
+        []
     end.
 
 -spec get_serial(#'OTPCertificate'{tbsCertificate::#'OTPTBSCertificate'{serialNumber::integer()}}) -> {'serial', string()}.
