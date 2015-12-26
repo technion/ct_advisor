@@ -26,9 +26,9 @@ lookup_name_list([]) ->
     [];
 
 lookup_name_list([{dNSName, Name}|Tail]) ->
-    {ok, _Columns, Rows} = pgapp:equery(
-            "SELECT email FROM domains where $1 LIKE concat('%.',domain)"
-            " or $1 = domain", [Name]),
+    {ok, _Columns, Rows} = pgapp:equery("SELECT email FROM registrations "
+        "WHERE ($1 LIKE concat('%.',domain) or $1 = domain) AND active =1",
+        [Name]),
     Match = case Rows of
     [{User}] ->
         {Name, binary_to_list(User)};

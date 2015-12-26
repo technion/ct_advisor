@@ -12,7 +12,7 @@ db_connect() ->
             {hostname, Creds#credentials.hostname},
             {username, Creds#credentials.username},
             {password, Creds#credentials.password},
-            {database, "ct_advisor"}]),
+            {database, "ct_advisor_int_live"}]),
     lager:info("Connection to database started: ~p", [C]),
     ok.
     
