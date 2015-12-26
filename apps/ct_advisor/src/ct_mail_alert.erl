@@ -21,7 +21,9 @@ send_alert([{Domain, User}|Tail], Certificate, {serial, Serial}) ->
         ++ Domain ++ " for which you are registered. If this was not you, you"
         " may wish to investigate. You can obtain further information "
         "by reviewing the issued certificate here: https://crt.sh/?serial="
-        ++ Serial},
+        ++ Serial ++ "\r\nIf you would like to unsubscribe from this service"
+        "please visit this link: "
+        "https://ctadvisor.lolware.net/registrations/unsubscribe"},
         [{relay, Creds#credentials.hostname},
         {username, Creds#credentials.username},
         {password, Creds#credentials.password}, {port, 587} ]),
