@@ -24,8 +24,8 @@ Setup
 
 This application uses a PostgreSQL database, and an SMTP server.
 
-- Install PostgreSQL and create a database
-- Run createtables.sql to create tables
+- Install the front end, ct_advisor_int
+- Create tables using the Rails frontend
 - Create priv/credentials.rr in the following format:
 
 ```erlang
