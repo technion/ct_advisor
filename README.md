@@ -3,6 +3,8 @@ ct_advisor
 
 ct_advisor is a proactive alerting tool for [Google's Certificate Transparency](https://www.certificate-transparency.org/).
 
+It is running live on this [this link](https://ctadvisor.lolware.net) and we encourage you to register your domains there.
+
 Google offers a number of great options for an administrator to utilise this feature. Unfortunately being an early adopter, particularly if you run Windows servers or run SSL on appliances, makes it difficult to take advantage of this service.
 
 As an alternative option, this service continually polls the CT log, and will trigger alerts if a certificate is ever registered for your domain, by any CA in the CT program. This can be used to identify fraudulent certificates.
@@ -50,7 +52,6 @@ In development
 --------------
 It's far easier to utilise my instance of this tool than to attempt to run it yourself - I recommend doing so unless you wish to be involved in development.
 
-The glaring TODO here is a public registration and sign up interface. This has a number of associated problems, such as handling bounces, bots, and considering whether a user actually needs to verify themselves as associated with a domain. This project is well underway however and I hope to launch this service soon.
 
 Contributing
 ------------
