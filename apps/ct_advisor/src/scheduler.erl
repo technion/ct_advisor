@@ -25,7 +25,7 @@ start_link() ->
 %% ------------------------------------------------------------------
 %% gen_server Function Definitions
 %% ------------------------------------------------------------------
--define(INTERVAL, 5000).
+-define(INTERVAL, 3000).
 
 init(_Args) ->
     erlang:send_after(?INTERVAL, self(), scheduler),

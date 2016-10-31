@@ -21,10 +21,7 @@ start(_StartType, _StartArgs) ->
 
 %%--------------------------------------------------------------------
 stop(_State) ->
-    [{connector, C}] = ets:lookup(db, connector),
-    ok = epgsql:close(C),
-    ets:delete(db),
-    lager:info("Connection to database shutdown: ~p", [C]),
+    lager:info("Connection shutting down", []),
     ok.
 
 %%====================================================================

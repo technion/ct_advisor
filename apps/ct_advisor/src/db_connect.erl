@@ -4,7 +4,6 @@
 -record(credentials, {hostname, username, password}).
 
 %% Establishes a connection to Postgresql.
-%% Creates an ETS table to record the connection PID
 db_connect() ->
     {ok, Config} = file:consult("priv/credentials.rr"),
     Creds = proplists:get_value(database, Config),
