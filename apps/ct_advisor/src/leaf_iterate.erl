@@ -96,6 +96,6 @@ lookup() ->
     ?assertEqual(noupdate, lookup_updates(1025)).
 
 enumerate_test() ->
-    ?assertEqual(?TEST_ENUMERATED_DOMAINS, enumerate_ids(9742371 , 9742372)).
+    ?assertEqual(?TEST_ENUMERATED_DOMAINS, enumerate_ids(10502585, 10502585)).
 
 -endif.

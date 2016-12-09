@@ -1,7 +1,7 @@
 -module(ct_fetch).
 -export([fetch_entry/1, fetch_sth/0, parse_sth/1]).
 
--define(CT_LOG, "https://ct.googleapis.com/aviator").
+-define(CT_LOG, "https://ct.googleapis.com/pilot").
 
 %% Connect to the REST API and fetch the JSON entry for a particular node
 -spec fetch_entry(pos_integer()) -> any().
@@ -30,10 +30,10 @@ parse_sth(JSON) ->
 -include_lib("eunit/include/eunit.hrl").
 -include("test_constants.hrl").
 
-%All tests based upon ID 9742371 - lolware.net
+%All tests based upon ID 10502585 - lolware.net
 fetch_entry_test() ->
     ibrowse:start(),
-    ?assertEqual(ct_fetch:fetch_entry(9742371), ?TEST_LEAF_ENTRY).
+    ?assertEqual(ct_fetch:fetch_entry(10502585), ?TEST_LEAF_ENTRY).
 
 fetch_sth_test() ->
     ibrowse:start(),

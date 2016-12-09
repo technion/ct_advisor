@@ -5,7 +5,7 @@
 all() -> [no_update, update, domain_check].
 
 querymock([]) ->
-    {ok, "Columns", [{9742371}]};
+    {ok, "Columns", [{10502585}]};
 querymock([A]) when is_integer(A) ->
     {ok, 1};
 querymock([_A]) ->
@@ -17,7 +17,7 @@ init_per_suite(Config) ->
     Config.
 
 no_update(_Config) ->
-    K = "{\"tree_size\":9742371,\"timestamp\":1449817937400,\"sha256_root_hash\":\"qeBs0XUYqtWTMYTEbnIKQhQefv5eOCl+dZCFwPrpljk=\",\"tree_head_signature\":\"BAMARzBFAiEA5xzKR86R2jWkX67PBabhg1/v4GrfeeBEbK4bT4Npns0CIF9ew7he6hpMwbfsNDbZOnrzByo4EQcArov1jHQFBG0K\"}",
+    K = "{\"tree_size\":10502585,\"timestamp\":1449817937400,\"sha256_root_hash\":\"qeBs0XUYqtWTMYTEbnIKQhQefv5eOCl+dZCFwPrpljk=\",\"tree_head_signature\":\"BAMARzBFAiEA5xzKR86R2jWkX67PBabhg1/v4GrfeeBEbK4bT4Npns0CIF9ew7he6hpMwbfsNDbZOnrzByo4EQcArov1jHQFBG0K\"}",
     meck:new(pgapp, [non_strict]),
     meck:expect(pgapp, equery, fun(_Query, Params) -> querymock(Params) end),
     meck:new(ct_fetch, [passthrough]),
@@ -28,7 +28,7 @@ no_update(_Config) ->
     ok.
 
 update(_Config) ->
-    K = "{\"tree_size\":9742372,\"timestamp\":1449817937400,\"sha256_root_hash\":\"qeBs0XUYqtWTMYTEbnIKQhQefv5eOCl+dZCFwPrpljk=\",\"tree_head_signature\":\"BAMARzBFAiEA5xzKR86R2jWkX67PBabhg1/v4GrfeeBEbK4bT4Npns0CIF9ew7he6hpMwbfsNDbZOnrzByo4EQcArov1jHQFBG0K\"}",
+    K = "{\"tree_size\":10502586,\"timestamp\":1449817937400,\"sha256_root_hash\":\"qeBs0XUYqtWTMYTEbnIKQhQefv5eOCl+dZCFwPrpljk=\",\"tree_head_signature\":\"BAMARzBFAiEA5xzKR86R2jWkX67PBabhg1/v4GrfeeBEbK4bT4Npns0CIF9ew7he6hpMwbfsNDbZOnrzByo4EQcArov1jHQFBG0K\"}",
     meck:new(pgapp),
     meck:expect(pgapp, equery, fun(_Query, Params) -> querymock(Params) end),
     meck:new(ct_fetch, [passthrough]),
