@@ -30,7 +30,7 @@ parse_sth(JSON) ->
 -include_lib("eunit/include/eunit.hrl").
 -include("test_constants.hrl").
 
-%All tests based upon ID 10502585 - lolware.net
+%Tests based upon ID 10502585 - lolware.net
 fetch_entry_test() ->
     ibrowse:start(),
     ?assertEqual(ct_fetch:fetch_entry(10502585), ?TEST_LEAF_ENTRY).
