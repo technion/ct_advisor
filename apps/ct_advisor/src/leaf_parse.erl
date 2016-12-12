@@ -7,8 +7,7 @@
 -spec parse_leaf(_) -> any().
 parse_leaf(RAW) ->
     {JSON} = jiffy:decode(RAW),
-    [{Entries}] = proplists:get_value(<<"entries">>, JSON),
-    proplists:get_value(<<"leaf_input">>, Entries).
+    proplists:get_value(<<"entries">>, JSON).
 
 %% Decodes the merkle leaf packed structure to return a certificate.
 -spec xparse(binary()) -> any().
@@ -45,7 +44,9 @@ get_serial(Cert) ->
 -include("test_constants.hrl").
 %All tests based upon ID 9742371 - lolware.net
 parse_leaf_test() ->
-    ?assertEqual(?TEST_MTL, parse_leaf(?TEST_LEAF_ENTRY)).
+    [{LeafTest}] = parse_leaf(?TEST_LEAF_ENTRY),
+    LeafTest2 = proplists:get_value(<<"leaf_input">>, LeafTest),
+    ?assertEqual(?TEST_MTL, LeafTest2).
 
 get_serial_test() ->
     X509 = leaf_parse:xparse(?TEST_MTL),

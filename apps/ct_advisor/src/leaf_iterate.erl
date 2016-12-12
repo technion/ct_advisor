@@ -55,9 +55,7 @@ get_range(LOW, HIGH) when HIGH > LOW ->
 %% Will fetch a certificate and use the various parsing functions to
 %% extract a list of domains on that certificate.
 -spec get_domain_from_id(pos_integer()) -> any().
-get_domain_from_id(ID) ->
-    LeafEntry =  ct_fetch:fetch_entry(ID),
-    MTL = leaf_parse:parse_leaf(LeafEntry),
+get_domain_from_id(MTL) ->
     try leaf_parse:xparse(MTL) of
     X509 ->
         leaf_parse:get_subjects(X509) ++ [leaf_parse:get_serial(X509)]
@@ -67,11 +65,11 @@ get_domain_from_id(ID) ->
     end.
 
 -spec enumerate_ids(pos_integer(), pos_integer()) -> [any(), ...].
-enumerate_ids(ID, ID) ->
-    [get_domain_from_id(ID)];
-
-enumerate_ids(FROM, TO) when FROM < TO ->
-    [get_domain_from_id(FROM)| enumerate_ids(FROM+1, TO)].
+enumerate_ids(FROM, TO) ->
+    Entries = ct_fetch:fetch_entry(FROM, TO),
+    Leaves = leaf_parse:parse_leaf(Entries),
+    MTLs = [proplists:get_value(<<"leaf_input">>, MTLs) || {MTLs} <- Leaves ],
+    [get_domain_from_id(MTL) || MTL <- MTLs].
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
