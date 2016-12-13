@@ -17,7 +17,7 @@ This image this ct_advisor in action:
 Monitoring your domain
 ----------------------
 
-This application is currently running live on my servers. At this point I consider it stable, whilst noting some database schema changes may occur to facilitate the upcoming front-end project. If you would like my server to monitor your domain in the meantime, please email me your request: technion@lolware.net. Please provide all names to monitor and associated email addresses.
+This application has been running for some time at the following site: [ctadvisor.lolware.net](https://ctadvisor.lolware.net).
 
 Note that monitors are not instant. Some certificates have taken several days to show up in CT monitor logs.
 
