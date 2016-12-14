@@ -20,8 +20,10 @@ lookup_updates(Latest) ->
     case Rows of
     [{LastLookup}] when Latest > LastLookup ->
         lager:info("Performing checks: ~B~n", [Latest]),
+        sendstats:gap(Latest, LastLookup),
         run_checks(LastLookup, Latest);
     _ ->
+        sendstats:gap(Latest, Latest),
         lager:debug("No updates, latest still: ~B~n", [Latest]),
         noupdate
     end.

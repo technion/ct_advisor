@@ -12,7 +12,8 @@
     epgsql,
     pgapp,
     gen_smtp,
-    lager
+    lager,
+    statsderl
    ]},
   {env,[]},
   {modules, [ ]},
