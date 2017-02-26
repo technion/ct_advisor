@@ -11,7 +11,7 @@ As an alternative option, this service continually polls the CT log, and will tr
 
 This image this ct_advisor in action:
 
-![CT Advisor Email](https://lolware.net/ct_advisor_email.jpg)
+![CT Advisor Email](https://lolware.net/assets/images/ct_advisor_email.jpg)
 
 
 Monitoring your domain
