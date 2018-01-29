@@ -62,3 +62,6 @@ domain_check(_Config) ->
     meck:unload(pgapp),
     meck:unload(ct_mail_alert),
     ok.
+
+end_per_suite(_Config) ->
+    ok.
