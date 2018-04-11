@@ -19,22 +19,17 @@ init_per_suite(Config) ->
 no_update(_Config) ->
     K = "{\"tree_size\":10502585,\"timestamp\":1449817937400,\"sha256_root_hash\":\"qeBs0XUYqtWTMYTEbnIKQhQefv5eOCl+dZCFwPrpljk=\",\"tree_head_signature\":\"BAMARzBFAiEA5xzKR86R2jWkX67PBabhg1/v4GrfeeBEbK4bT4Npns0CIF9ew7he6hpMwbfsNDbZOnrzByo4EQcArov1jHQFBG0K\"}",
     meck:new(pgapp, [non_strict]),
-    meck:new(sendstats),
-    meck:expect(sendstats, gap, fun(_Latest, _Current) -> ok end),
     meck:expect(pgapp, equery, fun(_Query, Params) -> querymock(Params) end),
     meck:new(ct_fetch, [passthrough]),
     meck:expect(ct_fetch, fetch_sth, fun() -> K end),
     noupdate = leaf_iterate:scheduled_check(),
     meck:unload(pgapp),
     meck:unload(ct_fetch),
-    meck:unload(sendstats),
     ok.
 
 update(_Config) ->
     K = "{\"tree_size\":10502586,\"timestamp\":1449817937400,\"sha256_root_hash\":\"qeBs0XUYqtWTMYTEbnIKQhQefv5eOCl+dZCFwPrpljk=\",\"tree_head_signature\":\"BAMARzBFAiEA5xzKR86R2jWkX67PBabhg1/v4GrfeeBEbK4bT4Npns0CIF9ew7he6hpMwbfsNDbZOnrzByo4EQcArov1jHQFBG0K\"}",
     meck:new(pgapp),
-    meck:new(sendstats, [non_strict]),
-    meck:expect(sendstats, gap, fun(_Latest, _Current) -> ok end),
     meck:expect(pgapp, equery, fun(_Query, Params) -> querymock(Params) end),
     meck:new(ct_fetch, [passthrough]),
     meck:expect(ct_fetch, fetch_sth, fun() -> K end),
@@ -43,7 +38,6 @@ update(_Config) ->
         leaf_iterate:scheduled_check(),
     meck:unload(pgapp),
     meck:unload(ct_fetch),
-    meck:unload(sendstats),
     ok.
 
 domain_check(_Config) ->

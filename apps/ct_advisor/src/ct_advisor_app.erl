@@ -16,7 +16,6 @@
 start(_StartType, _StartArgs) ->
     db_connect:db_connect(),
     lager:set_loglevel(lager_console_backend, debug), % Debugging
-    statsderl_app:start(),
     scheduler:start_link(),
     'ct_advisor_sup':start_link().
 
