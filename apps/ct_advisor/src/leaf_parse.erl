@@ -1,5 +1,5 @@
 -module(leaf_parse).
--export([parse_leaf/1, xparse/1, get_subjects/1, get_serial/1]).
+-export([parse_leaf/1, xparse/1, get_subjects/1, get_serial/1, paddedhex/1]).
 
 -include_lib("public_key/include/public_key.hrl").
 
@@ -37,7 +37,18 @@ get_subjects(Cert) ->
 get_serial(Cert) ->
     Serial = Cert#'OTPCertificate'.tbsCertificate#'OTPTBSCertificate'
         .serialNumber,
-    {serial, integer_to_list(Serial, 16)}.
+    {serial, paddedhex(Serial)}.
+
+% https://stackoverflow.com/questions/45821143/ssl-certificates-leading-zeros-are-displayed-in-windows-but-not-unix-ksh-shell
+-spec paddedhex(pos_integer()) -> string().
+paddedhex(X) ->
+    Hex = integer_to_list(X, 16),
+    case hd(Hex) >= $8 of
+    true ->
+        "00" ++ Hex;
+    _ ->
+        Hex
+    end.
 
 -ifdef(TEST).
 -include_lib("eunit/include/eunit.hrl").
@@ -47,6 +58,10 @@ parse_leaf_test() ->
     [{LeafTest}] = parse_leaf(?TEST_LEAF_ENTRY),
     LeafTest2 = proplists:get_value(<<"leaf_input">>, LeafTest),
     ?assertEqual(?TEST_MTL, LeafTest2).
+
+paddedhex_test() ->
+    ?assertEqual("00ED2DF6455F94C89589E12F4E2F174FA3",
+                 paddedhex(315265683328745785102777192423882182563)).
 
 get_serial_test() ->
     X509 = leaf_parse:xparse(?TEST_MTL),
