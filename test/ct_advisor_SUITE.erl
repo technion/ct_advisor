@@ -1,6 +1,8 @@
 -module(ct_advisor_SUITE).
 -include_lib("common_test/include/ct.hrl").
--compile(export_all).
+%-compile(export_all).
+-export([all/0, init_per_suite/1, end_per_suite/1]).
+-export([no_update/1, update/1, domain_check/1]).
 
 all() -> [no_update, update, domain_check].
 
