@@ -15,7 +15,7 @@
 %%====================================================================
 start(_StartType, _StartArgs) ->
     db_connect:db_connect(),
-    lager:set_loglevel(lager_console_backend, debug), % Debugging
+    lager:set_loglevel(lager_console_backend, notice), % Debugging
     scheduler:start_link(),
     'ct_advisor_sup':start_link().
 

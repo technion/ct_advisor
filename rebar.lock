@@ -28,7 +28,7 @@
   0},
  {<<"pgapp">>,
   {git,"https://github.com/epgsql/pgapp.git",
-       {ref,"90c309a97c506d0bc1ccaa0541728f2636ef4b3e"}},
+       {ref,"15c042f70659465684e9a2ea319d2b2226877a69"}},
   0},
  {<<"poolboy">>,
   {git,"git://github.com/devinus/poolboy.git",
