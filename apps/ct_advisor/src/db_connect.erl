@@ -8,7 +8,7 @@ db_connect() ->
     {ok, Config} = file:consult("priv/credentials.rr"),
     Creds = proplists:get_value(database, Config),
     {ok, C} = pgapp:connect([{size, 5}, 
-            {hostname, Creds#credentials.hostname},
+            {host, Creds#credentials.hostname},
             {username, Creds#credentials.username},
             {password, Creds#credentials.password},
             {database, "ct_advisor_int_live"}]),
