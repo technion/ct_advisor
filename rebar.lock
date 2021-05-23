@@ -1,3 +1,4 @@
+{"1.1.0",
 [{<<"epgsql">>,
   {git,"https://github.com/epgsql/epgsql.git",
        {ref,"b3138f76759750ab5e6202766cb39acd88c8ff54"}},
@@ -6,21 +7,18 @@
   {git,"https://github.com/Vagabond/gen_smtp.git",
        {ref,"6ec763591095e1a0f448a7a602f71a23ff31361b"}},
   0},
- {<<"goldrush">>,
-  {git,"https://github.com/basho/goldrush.git",
-       {ref,"8f1b715d36b650ec1e1f5612c00e28af6ab0de82"}},
-  1},
+ {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
  {<<"ibrowse">>,
   {git,"https://github.com/cmullaparthi/ibrowse.git",
-       {ref,"7529807170cf3c8f6a8c5c95526e670420ff591b"}},
+       {ref,"24cb21f9ec97ab3b181617d966e180ef519c5eef"}},
   0},
  {<<"jiffy">>,
   {git,"https://github.com/davisp/jiffy.git",
-       {ref,"ba09da790477b0f7a31aeaa9b21cae0ffba27d77"}},
+       {ref,"effc3c9a68478b692523e61b308ad9257c1ddeca"}},
   0},
  {<<"lager">>,
-  {git,"https://github.com/basho/lager.git",
-       {ref,"81eaef0ce98fdbf64ab95665e3bc2ec4b24c7dac"}},
+  {git,"https://github.com/erlang-lager/lager.git",
+       {ref,"459a3b2cdd9eadd29e5a7ce5c43932f5ccd6eb88"}},
   0},
  {<<"meck">>,
   {git,"https://github.com/eproxus/meck.git",
@@ -33,4 +31,8 @@
  {<<"poolboy">>,
   {git,"git://github.com/devinus/poolboy.git",
        {ref,"29be47db8c2be38b18c908e43a80ebb7b9b6116b"}},
-  1}].
+  1}]}.
+[
+{pkg_hash,[
+ {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>}]}
+].

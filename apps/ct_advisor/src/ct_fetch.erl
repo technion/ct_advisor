@@ -1,7 +1,14 @@
 -module(ct_fetch).
 -export([fetch_entry/2, fetch_sth/0, parse_sth/1]).
 
+%% Test suits are based on the originally monitored pilot log
+-ifdef(TEST).
 -define(CT_LOG, "https://ct.googleapis.com/pilot").
+-else.
+-define(CT_LOG, "https://ct.googleapis.com/logs/xenon2021").
+-endif.
+
+-define(USERAGENT, "CTAdvisor").
 
 %% Connect to the REST API and fetch the JSON entry for a particular node
 -spec fetch_entry(pos_integer(), pos_integer()) -> any().
@@ -10,7 +17,7 @@ fetch_entry(X, Y) ->
     Yi = integer_to_list(Y),
     URL = ?CT_LOG ++ "/ct/v1/get-entries?start=" ++ Xi ++ "&end=" ++ Yi,
     {ok, "200", _Headers, Content} =
-        ibrowse:send_req(URL, [], get),
+        ibrowse:send_req(URL, [{"User-Agent",?USERAGENT}], get),
     Content.
 
 %% Connect to the REST API and obtain the "sth", which is the total count
@@ -18,7 +25,7 @@ fetch_entry(X, Y) ->
 -spec fetch_sth() -> any().
 fetch_sth() ->
     {ok, "200", _Headers, Content} =
-        ibrowse:send_req(?CT_LOG ++ "/ct/v1/get-sth", [], get),
+        ibrowse:send_req(?CT_LOG ++ "/ct/v1/get-sth", [{"User-Agent",?USERAGENT}], get),
     Content.
 
 %% Extract the sth counter from the JSON response
