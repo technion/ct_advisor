@@ -41,7 +41,7 @@ run_checks(LOW, HIGH) ->
 
 %% Rate limiting function - if a range is higher than a configured
 %% value - reduce the range.
--define(ITERATIONS, 64).
+-define(ITERATIONS, 512).
 -spec get_range(pos_integer(), pos_integer()) -> {pos_integer(), pos_integer()}.
 get_range(LOW, HIGH) when HIGH > LOW ->
     % Note the highest lookup should be STH -1
@@ -89,7 +89,7 @@ teardown(_C) ->
 
 ranges_test() ->
     ?assertEqual({7, 7}, get_range(7, 8)),
-    ?assertEqual({7, 71}, get_range(7, 107)).
+    ?assertEqual({7, 519}, get_range(7, 540)).
 
 lookup() ->
     ?assertEqual(noupdate, lookup_updates(1025)).
