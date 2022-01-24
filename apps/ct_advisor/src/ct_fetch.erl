@@ -5,7 +5,7 @@
 -ifdef(TEST).
 -define(CT_LOG, "https://ct.googleapis.com/pilot").
 -else.
--define(CT_LOG, "https://ct.googleapis.com/logs/xenon2021").
+-define(CT_LOG, "https://ct.googleapis.com/logs/xenon2022").
 -endif.
 
 -define(USERAGENT, "CTAdvisor").
