@@ -5,16 +5,17 @@
   0},
  {<<"gen_smtp">>,
   {git,"https://github.com/Vagabond/gen_smtp.git",
-       {ref,"6ec763591095e1a0f448a7a602f71a23ff31361b"}},
+       {ref,"410557a4b52cbabc99062e2196fa0ec16c3c03a7"}},
   0},
  {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
+ {<<"hut">>,{pkg,<<"hut">>,<<"1.3.0">>},1},
  {<<"ibrowse">>,
   {git,"https://github.com/cmullaparthi/ibrowse.git",
        {ref,"24cb21f9ec97ab3b181617d966e180ef519c5eef"}},
   0},
  {<<"jiffy">>,
   {git,"https://github.com/davisp/jiffy.git",
-       {ref,"effc3c9a68478b692523e61b308ad9257c1ddeca"}},
+       {ref,"9ea1b35b6e60ba21dfd4adbd18e7916a831fd7d4"}},
   0},
  {<<"lager">>,
   {git,"https://github.com/erlang-lager/lager.git",
@@ -22,7 +23,7 @@
   0},
  {<<"meck">>,
   {git,"https://github.com/eproxus/meck.git",
-       {ref,"4ecc1ae9089edc6977e8c8c4cd41081513cc5590"}},
+       {ref,"5aaa24886db404f995c9a91b421367f6bfe6e566"}},
   0},
  {<<"pgapp">>,
   {git,"https://github.com/technion/pgapp.git",
@@ -31,8 +32,11 @@
  {<<"poolboy">>,
   {git,"git://github.com/devinus/poolboy.git",
        {ref,"29be47db8c2be38b18c908e43a80ebb7b9b6116b"}},
-  1}]}.
+  1},
+ {<<"ranch">>,{pkg,<<"ranch">>,<<"1.7.1">>},1}]}.
 [
 {pkg_hash,[
- {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>}]}
+ {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>},
+ {<<"hut">>, <<"71F2F054E657C03F959CF1ACC43F436EA87580696528CA2A55C8AFB1B06C85E7">>},
+ {<<"ranch">>, <<"6B1FAB51B49196860B733A49C07604465A47BDB78AA10C1C16A3D199F7F8C881">>}]}
 ].
